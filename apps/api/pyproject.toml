@@ -1,0 +1,39 @@
+[project]
+name = "api"
+version = "0.1.0"
+description = "SentryForm Real-time Behavioral Biometrics ML Engine"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.110.0",
+    "lightgbm>=4.7.0",
+    "numpy>=1.26.0",
+    "onnx>=1.22.0",
+    "onnxmltools>=1.16.0",
+    "onnxruntime>=1.17.0",
+    "polars>=0.20.0",
+    "prometheus-client>=0.20.0",
+    "pydantic>=2.0.0",
+    "requests>=2.34.2",
+    "scikit-learn>=1.9.0",
+    "skl2onnx>=1.20.0",
+    "uvicorn[standard]>=0.28.0",
+]
+
+[tool.pyright]
+include = ["src"]
+extraPaths = ["src"]
+executionEnvironments = [
+  { root = "src" }
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+asyncio_mode = "auto"
