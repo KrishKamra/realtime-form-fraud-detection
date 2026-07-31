@@ -43,12 +43,12 @@ jobs:
       - name: Run Ruff Lint Check
         run: |
           cd apps/api
-          uv run ruff check .
+          uvx ruff check .
 
       - name: Run Ruff Format Check
         run: |
           cd apps/api
-          uv run ruff format . --check
+          uvx ruff format . --check
 
       - name: Run Pytest Test Suite
         run: |
@@ -73,6 +73,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 9  # 👈 Explicitly specifies pnpm version for action-setup@v4
 
       - name: Install Workspace Dependencies
         run: pnpm install --frozen-lockfile
