@@ -10,19 +10,28 @@
 ```
 
 ### 🛡️ Real-Time Behavioral Biometrics & Fraud Detection Engine
-
 *Sub-millisecond risk scoring across high-frequency WebSocket streams using Polars & ONNX Runtime.*
 
 </div>
 
 ---
 
-<div align="center>
-[License](./LICENSE) · [**API Reference**](./docs/api-spec.md) · [**Architecture**](./docs/architecture.md)
+<div align="center">
+
+[**License**](./LICENSE) · [**API Reference**](./docs/api-spec.md) · [**Architecture**](./docs/architecture.md)
+
+<br>
+
+[![CI Pipeline](https://github.com/KrishKamra/sentry-form/actions/workflows/ci.yml/badge.svg)](https://github.com/KrishKamra/sentry-form/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![Python: 3.11](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Framework: FastAPI 0.110](https://img.shields.io/badge/Framework-FastAPI%200.110-009688.svg?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Inference: ONNX Runtime](https://img.shields.io/badge/Inference-ONNX%20Runtime%201.17-00599C.svg?style=flat-square&logo=onnx&logoColor=white)](https://onnxruntime.ai/)
+[![Ecosystem: Next.js 14](https://img.shields.io/badge/Ecosystem-Next.js%2014-000000.svg?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Language: TypeScript 5.7](https://img.shields.io/badge/Language-TypeScript%205.7-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Maintenance: Actively Developed](https://img.shields.io/badge/Maintenance-Actively%20Developed-10B981.svg?style=flat-square)](https://github.com/KrishKamra/sentry-form)
 
 </div>
-
-[![CI Pipeline](https://github.com/KrishKamra/sentry-form/actions/workflows/ci.yml/badge.svg)](https://github.com/KrishKamra/sentry-form/actions/workflows/ci.yml) &nbsp; [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE) [![Python: 3.11](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/) [![Framework: FastAPI 0.110](https://img.shields.io/badge/Framework-FastAPI%200.110-009688.svg?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/) [![Inference: ONNX Runtime](https://img.shields.io/badge/Inference-ONNX%20Runtime%201.17-00599C.svg?style=flat-square&logo=onnx&logoColor=white)](https://onnxruntime.ai/) [![Ecosystem: Next.js 14](https://img.shields.io/badge/Ecosystem-Next.js%2014-000000.svg?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![Language: TypeScript 5.7](https://img.shields.io/badge/Language-TypeScript%205.7-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Maintenance: Actively Developed](https://img.shields.io/badge/Maintenance-Actively%20Developed-10B981.svg?style=flat-square)](https://github.com/KrishKamra/sentry-form)
 
 ---
 
@@ -87,10 +96,9 @@ The model is benchmarked on a test split ($N = 25,000$ interaction sessions) usi
 Evaluated on $25,000$ unseen validation frames ($20,000$ Human Applicant Sessions, $5,000$ Anomaly/Bot Trajectories):
 
 ```text
-                  Predicted Genuine (0)    Predicted Fraudulent (1)
-Actual Genuine (0)     19,776 (98.88%)            224 (1.12%)       <-- Low friction for real users
-Actual Fraudulent (1)      95 (1.90%)            4,905 (98.10%)      <-- High catch rate for bots
-
+                  Predicted Genuine (0) Predicted Fraudulent (1)
+Actual Genuine (0) 19,776 (98.88%) 224 (1.12%) <-- Low friction for real users
+Actual Fraudulent (1) 95 (1.90%) 4,905 (98.10%) <-- High catch rate for bots
 ```
 
 ---
@@ -108,11 +116,11 @@ Benchmarking was executed on an **Intel Core Ultra 5 (Lunar Lake)** architecture
 ```
 Latency Scaling Curve (p99):
 ONNX Engine : █ 0.84ms (Sub-millisecond SLA)
-XGBoost Py  : █████ 3.42ms
+XGBoost Py : █████ 3.42ms
 PyTorch JIT : ████████████████████ 14.20ms
+```
 
-``` 
---- 
+---
 
 ## 🎯 Core Value Proposition
 
@@ -148,24 +156,20 @@ graph TD
         A[Applicant Web Form / Next.js] -->|WSS Telemetry Stream| B[Reverse Proxy / Ingress]
         A -->|REST API Requests| B
     end
-
     subgraph Service Mesh
         B -->|Port 3000| C[Next.js Web Frontend]
         B -->|Port 8000| D[FastAPI Behavioral Risk Engine]
     end
-
     subgraph Inference Pipeline
         D -->|100ms Event Buffer| E[Polars Feature Extraction]
         E -->|Dense Feature Tensor| F[ONNX C++ Execution Target]
         F -->|Risk Score Evaluation| G[WebSocket Manager]
         G -->|Real-Time Risk Feedback| A
     end
-
     subgraph Observability Stack
         D -->|/metrics Endpoint| H[Prometheus Collector]
         H -->|5s Scrape Target| I[Grafana Dashboard]
     end
-
 ```
 
 ### System Workflow Highlights
@@ -232,27 +236,26 @@ Bot scripts typically exhibit perfectly linear paths ($C = 0$) or mathematically
 ```text
 sentry-form/
 ├── apps/
-│   ├── api/                     # FastAPI Behavioral Scoring Engine
-│   │   ├── src/
-│   │   │   ├── main.py          # ASGI Server & Route Definitions
-│   │   │   ├── engine.py        # ONNX Runtime Execution Wrapper
-│   │   │   └── features.py      # Polars Vectorized Feature Pipelines
-│   │   ├── tests/               # Pytest Suite
-│   │   └── pyproject.toml       # Python Dependency Manifest (uv)
-│   └── web/                     # Next.js Applicant Web Application
-│       ├── src/
-│       │   ├── components/      # Glassmorphic UI Form & Telemetry Hook
-│       │   └── hooks/           # useTelemetry Stream Hook
-│       └── package.json         # Workspace Node Package Dependencies
+│ ├── api/ # FastAPI Behavioral Scoring Engine
+│ │ ├── src/
+│ │ │ ├── main.py # ASGI Server & Route Definitions
+│ │ │ ├── engine.py # ONNX Runtime Execution Wrapper
+│ │ │ └── features.py # Polars Vectorized Feature Pipelines
+│ │ ├── tests/ # Pytest Suite
+│ │ └── pyproject.toml # Python Dependency Manifest (uv)
+│ └── web/ # Next.js Applicant Web Application
+│ ├── src/
+│ │ ├── components/ # Glassmorphic UI Form & Telemetry Hook
+│ │ └── hooks/ # useTelemetry Stream Hook
+│ └── package.json # Workspace Node Package Dependencies
 ├── deployment/
-│   ├── docker-compose.yml       # Production Compose Orchestration
-│   ├── prometheus.yml           # Prometheus Metric Scraper Rules
-│   └── grafana/                 # Pre-configured Telemetry Dashboard
-├── .github/                     # GitHub Actions Workflows & Templates
-├── ARCHITECTURE.md              # In-depth System Topologies
-├── API-SPEC.md                  # REST & WebSocket Interface Specs
-└── README.md                    # Project Documentation Root
-
+│ ├── docker-compose.yml # Production Compose Orchestration
+│ ├── prometheus.yml # Prometheus Metric Scraper Rules
+│ └── grafana/ # Pre-configured Telemetry Dashboard
+├── .github/ # GitHub Actions Workflows & Templates
+├── ARCHITECTURE.md # In-depth System Topologies
+├── API-SPEC.md # REST & WebSocket Interface Specs
+└── README.md # Project Documentation Root
 ```
 
 ---
@@ -271,7 +274,6 @@ Execute the unified Docker Compose stack from the project root:
 
 ```bash
 docker compose -f deployment/docker-compose.yml up --build -d
-
 ```
 
 ### 2. Verify Service Endpoints
@@ -300,7 +302,7 @@ cd apps/api
 
 # 2. Activate Virtual Environment via uv
 uv venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate # On Windows: .venv\Scripts\activate
 uv pip install -e .
 
 # 3. Execute Model Training & Deterministic ONNX Compilation
@@ -308,7 +310,6 @@ python -m src.training.train --seed 42 --export-onnx ../../models/sentry_lgbm.on
 
 # 4. Run Verification Tests
 pytest
-
 ```
 
 ---
@@ -340,7 +341,6 @@ Contributions are welcome! Please read our **[CONTRIBUTING.md](./docs/CONTRIBUTI
 # Run linting and typechecking locally
 pnpm --filter web typecheck
 cd apps/api && ruff check .
-
 ```
 
 ---
@@ -357,3 +357,4 @@ cd apps/api && ruff check .
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
+```
