@@ -12,9 +12,7 @@ class RiskScoringEngine:
 
         if os.path.exists(self.model_path):
             opts = ort.SessionOptions()
-            opts.graph_optimization_level = (
-                ort.GraphOptimizationLevel.ORT_ENABLE_ALL
-            )
+            opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
             opts.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
             self.session = ort.InferenceSession(
                 self.model_path, opts, providers=["CPUExecutionProvider"]

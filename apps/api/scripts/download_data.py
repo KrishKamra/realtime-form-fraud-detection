@@ -1,5 +1,6 @@
 import io
 import os
+
 import numpy as np
 import polars as pl
 import requests
@@ -22,27 +23,31 @@ def download_and_process_cmu_dataset() -> tuple[np.ndarray, np.ndarray]:
 
     feature_cols = [c for c in df.columns if c.startswith(("H.", "DD.", "UD."))]
 
-    processed_df = df.select([
-        pl.col("subject"),
-        pl.concat_list([c for c in feature_cols if c.startswith("DD.")])
-        .list.eval(pl.element().mean())
-        .list.get(0)
-        .alias("flight_time_mean"),
-        pl.concat_list([c for c in feature_cols if c.startswith("DD.")])
-        .list.eval(pl.element().std())
-        .list.get(0)
-        .alias("flight_time_std"),
-        pl.concat_list([c for c in feature_cols if c.startswith("H.")])
-        .list.eval(pl.element().mean())
-        .list.get(0)
-        .alias("dwell_time_mean"),
-    ])
+    processed_df = df.select(
+        [
+            pl.col("subject"),
+            pl.concat_list([c for c in feature_cols if c.startswith("DD.")])
+            .list.eval(pl.element().mean())
+            .list.get(0)
+            .alias("flight_time_mean"),
+            pl.concat_list([c for c in feature_cols if c.startswith("DD.")])
+            .list.eval(pl.element().std())
+            .list.get(0)
+            .alias("flight_time_std"),
+            pl.concat_list([c for c in feature_cols if c.startswith("H.")])
+            .list.eval(pl.element().mean())
+            .list.get(0)
+            .alias("dwell_time_mean"),
+        ]
+    )
 
-    processed_df = processed_df.with_columns([
-        (pl.col("flight_time_mean") * 1000.0).alias("flight_time_mean_ms"),
-        (pl.col("flight_time_std") * 1000.0).alias("flight_time_std_ms"),
-        (pl.col("dwell_time_mean") * 1000.0).alias("dwell_time_mean_ms"),
-    ])
+    processed_df = processed_df.with_columns(
+        [
+            (pl.col("flight_time_mean") * 1000.0).alias("flight_time_mean_ms"),
+            (pl.col("flight_time_std") * 1000.0).alias("flight_time_std_ms"),
+            (pl.col("dwell_time_mean") * 1000.0).alias("dwell_time_mean_ms"),
+        ]
+    )
 
     subjects = processed_df["subject"].to_list()
     # Subjects s002-s040 = Legitimate (0); s041-s057 = Imposters (1)
@@ -77,16 +82,18 @@ def download_and_process_cmu_dataset() -> tuple[np.ndarray, np.ndarray]:
     total_events = np.random.normal(120, 35, size=n_samples)
     heuristic_flag = ((paste_cnt > 0) & (flight_mean < 35.0)).astype(np.float32)
 
-    X = np.column_stack([
-        flight_mean,
-        flight_std,
-        dwell_mean,
-        paste_cnt.astype(np.float32),
-        blur_cnt.astype(np.float32),
-        mouse_jitter.astype(np.float32),
-        total_events.astype(np.float32),
-        heuristic_flag,
-    ]).astype(np.float32)
+    X = np.column_stack(
+        [
+            flight_mean,
+            flight_std,
+            dwell_mean,
+            paste_cnt.astype(np.float32),
+            blur_cnt.astype(np.float32),
+            mouse_jitter.astype(np.float32),
+            total_events.astype(np.float32),
+            heuristic_flag,
+        ]
+    ).astype(np.float32)
 
     X = np.clip(X, a_min=0.0, a_max=None)
 

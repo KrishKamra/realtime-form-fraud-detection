@@ -101,7 +101,8 @@ async def websocket_telemetry_endpoint(websocket: WebSocket, session_id: str):
             # Update shared session store with applicant identity
             ACTIVE_SESSIONS[session_id] = {
                 "session_id": session_id,
-                "applicant_name": getattr(batch, "applicant_name", None) or "Anonymous Applicant",
+                "applicant_name": getattr(batch, "applicant_name", None)
+                or "Anonymous Applicant",
                 "risk_score": float(risk_score),
                 "is_anomalous": bool(is_anomalous),
                 "latency_ms": round(elapsed_latency_ms, 2),

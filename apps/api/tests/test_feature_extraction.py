@@ -24,11 +24,13 @@ class FeatureExtractor:
         flight_time_std = 0.0
 
         if len(keystroke_df) > 1:
-            keystroke_df = keystroke_df.with_columns([
-                (
-                    pl.col("timestamp_ms") - pl.col("timestamp_ms").shift(1)
-                ).alias("time_diff")
-            ])
+            keystroke_df = keystroke_df.with_columns(
+                [
+                    (pl.col("timestamp_ms") - pl.col("timestamp_ms").shift(1)).alias(
+                        "time_diff"
+                    )
+                ]
+            )
 
             diffs = keystroke_df.select("time_diff").drop_nulls()
             if len(diffs) > 0:
@@ -36,9 +38,7 @@ class FeatureExtractor:
                     diffs.select(pl.col("time_diff").mean()).item()
                 )
                 flight_time_std = float(
-                    diffs.select(pl.col("time_diff").std())
-                    .fill_null(0.0)
-                    .item()
+                    diffs.select(pl.col("time_diff").std()).fill_null(0.0).item()
                 )
 
         # Extract Interaction Counts
@@ -53,31 +53,31 @@ class FeatureExtractor:
         mouse_jitter = 0.0
 
         if len(mouse_df) > 2:
-            mouse_df = mouse_df.with_columns([
-                (pl.col("cursor_x") - pl.col("cursor_x").shift(1)).alias("dx"),
-                (pl.col("cursor_y") - pl.col("cursor_y").shift(1)).alias("dy"),
-            ]).drop_nulls()
+            mouse_df = mouse_df.with_columns(
+                [
+                    (pl.col("cursor_x") - pl.col("cursor_x").shift(1)).alias("dx"),
+                    (pl.col("cursor_y") - pl.col("cursor_y").shift(1)).alias("dy"),
+                ]
+            ).drop_nulls()
 
-            dx_std = float(
-                mouse_df.select(pl.col("dx").std()).fill_null(0.0).item()
-            )
-            dy_std = float(
-                mouse_df.select(pl.col("dy").std()).fill_null(0.0).item()
-            )
+            dx_std = float(mouse_df.select(pl.col("dx").std()).fill_null(0.0).item())
+            dy_std = float(mouse_df.select(pl.col("dy").std()).fill_null(0.0).item())
             mouse_jitter = (dx_std + dy_std) / 2.0
 
         # Construct feature array: [8 features]
         feature_vector = np.array(
-            [[
-                flight_time_mean,
-                flight_time_std,
-                dwell_time_mean,
-                paste_count,
-                tab_blur_count,
-                mouse_jitter,
-                total_events,
-                1.0 if paste_count > 0 and flight_time_mean < 15.0 else 0.0,
-            ]],
+            [
+                [
+                    flight_time_mean,
+                    flight_time_std,
+                    dwell_time_mean,
+                    paste_count,
+                    tab_blur_count,
+                    mouse_jitter,
+                    total_events,
+                    1.0 if paste_count > 0 and flight_time_mean < 15.0 else 0.0,
+                ]
+            ],
             dtype=np.float32,
         )
 

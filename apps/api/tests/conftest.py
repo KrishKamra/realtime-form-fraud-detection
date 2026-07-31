@@ -14,20 +14,22 @@ def sample_human_events() -> list[TelemetryEvent]:
 
     # Simulate typing characters with human flight time (~120ms between keys)
     for i in range(10):
-        events.extend([
-            TelemetryEvent(
-                event_type=EventType.KEY_DOWN,
-                field_id="annual_income",
-                timestamp_ms=base_time + (i * 120),
-                key_code=f"Digit{i}",
-            ),
-            TelemetryEvent(
-                event_type=EventType.KEY_UP,
-                field_id="annual_income",
-                timestamp_ms=base_time + (i * 120) + 40,  # 40ms dwell time
-                key_code=f"Digit{i}",
-            ),
-        ])
+        events.extend(
+            [
+                TelemetryEvent(
+                    event_type=EventType.KEY_DOWN,
+                    field_id="annual_income",
+                    timestamp_ms=base_time + (i * 120),
+                    key_code=f"Digit{i}",
+                ),
+                TelemetryEvent(
+                    event_type=EventType.KEY_UP,
+                    field_id="annual_income",
+                    timestamp_ms=base_time + (i * 120) + 40,  # 40ms dwell time
+                    key_code=f"Digit{i}",
+                ),
+            ]
+        )
 
     # Simulate curved mouse movement with varying step sizes (human jitter)
     x_steps = [15.5, 12.1, 18.3, 14.0, 16.8]
@@ -57,20 +59,22 @@ def sample_bot_events() -> list[TelemetryEvent]:
     events: list[TelemetryEvent] = []
 
     for i in range(10):
-        events.extend([
-            TelemetryEvent(
-                event_type=EventType.KEY_DOWN,
-                field_id="ssn",
-                timestamp_ms=base_time + (i * 2),
-                key_code="Digit1",
-            ),
-            TelemetryEvent(
-                event_type=EventType.KEY_UP,
-                field_id="ssn",
-                timestamp_ms=base_time + (i * 2) + 1,
-                key_code="Digit1",
-            ),
-        ])
+        events.extend(
+            [
+                TelemetryEvent(
+                    event_type=EventType.KEY_DOWN,
+                    field_id="ssn",
+                    timestamp_ms=base_time + (i * 2),
+                    key_code="Digit1",
+                ),
+                TelemetryEvent(
+                    event_type=EventType.KEY_UP,
+                    field_id="ssn",
+                    timestamp_ms=base_time + (i * 2) + 1,
+                    key_code="Digit1",
+                ),
+            ]
+        )
 
     events.append(
         TelemetryEvent(

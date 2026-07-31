@@ -1,9 +1,11 @@
 import os
 from typing import cast
+from urllib.error import HTTPError, URLError
 
 import lightgbm as lgb
 import numpy as np
 import polars as pl
+from download_data import download_and_process_cmu_dataset
 from onnx import ModelProto
 from onnxmltools import convert_lightgbm
 from onnxmltools.convert.common.data_types import FloatTensorType
@@ -12,10 +14,7 @@ from sklearn.metrics import (
     classification_report,
     roc_auc_score,
 )
-
 from sklearn.model_selection import train_test_split
-
-from download_data import download_and_process_cmu_dataset
 
 
 def generate_realistic_behavioral_fallback(
@@ -50,20 +49,20 @@ def generate_realistic_behavioral_fallback(
     prob = 1.0 / (1.0 + np.exp(-logit.ravel()))
     y = (prob > 0.65).astype(np.int32)
 
-    heuristic_flag = ((paste_count > 1) & (flight_mean < 25.0)).astype(
-        np.float32
-    )
+    heuristic_flag = ((paste_count > 1) & (flight_mean < 25.0)).astype(np.float32)
 
-    X = np.hstack([
-        flight_mean,
-        flight_std,
-        dwell_mean,
-        paste_count.astype(np.float32),
-        tab_blur_count.astype(np.float32),
-        mouse_jitter,
-        total_events,
-        heuristic_flag,
-    ]).astype(np.float32)
+    X = np.hstack(
+        [
+            flight_mean,
+            flight_std,
+            dwell_mean,
+            paste_count.astype(np.float32),
+            tab_blur_count.astype(np.float32),
+            mouse_jitter,
+            total_events,
+            heuristic_flag,
+        ]
+    ).astype(np.float32)
 
     X = np.clip(X, a_min=0.0, a_max=None)
     return X, y
@@ -86,7 +85,7 @@ def load_dataset() -> tuple[np.ndarray, np.ndarray]:
     try:
         print("Dataset missing locally. Ingesting CMU Keystroke Benchmark...")
         return download_and_process_cmu_dataset()
-    except Exception as err:
+    except (URLError, HTTPError, OSError, ValueError) as err:
         print(
             f"[Warning]: Failed to download benchmark dataset ({err}). "
             "Falling back to non-linear realistic behavioral generator..."
@@ -117,7 +116,7 @@ def train_and_export() -> None:
     # Cast to NumPy arrays first to prevent scipy.sparse index stub errors
     y_train_pred = np.asarray(clf.predict(X_train))
     y_test_pred = np.asarray(clf.predict(X_test))
-    
+
     proba_matrix = np.asarray(clf.predict_proba(X_test))
     y_test_proba = proba_matrix[:, 1]
 
