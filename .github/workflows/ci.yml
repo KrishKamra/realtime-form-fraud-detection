@@ -18,9 +18,6 @@ jobs:
   python-tests:
     name: Python Engine Tests & Linting
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/api
 
     steps:
       - name: Checkout Code
@@ -39,16 +36,24 @@ jobs:
           python-version: "3.11"
 
       - name: Install Dependencies
-        run: uv sync --frozen
+        run: |
+          cd apps/api
+          uv sync --frozen
 
       - name: Run Ruff Lint Check
-        run: uv run ruff check .
+        run: |
+          cd apps/api
+          uv run ruff check .
 
       - name: Run Ruff Format Check
-        run: uv run ruff format . --check
+        run: |
+          cd apps/api
+          uv run ruff format . --check
 
       - name: Run Pytest Test Suite
-        run: uv run pytest
+        run: |
+          cd apps/api
+          uv run pytest
 
   # ---------------------------------------------------------------------------
   # Job 2: Frontend Web Application Checks (apps/web)
@@ -64,27 +69,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
-      - name: Get pnpm store directory
-        id: pnpm-store
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-          echo "store_path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-store.outputs.store_path }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+        uses: pnpm/action-setup@v4
 
       - name: Install Workspace Dependencies
         run: pnpm install --frozen-lockfile
