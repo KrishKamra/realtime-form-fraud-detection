@@ -18,35 +18,35 @@ jobs:
   python-tests:
     name: Python Engine Tests & Linting
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Install uv Package Manager
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+          enable-cache: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install uv Package Manager
-        uses: astral-sh/setup-uv@v3
-        with:
-          version: "latest"
-
       - name: Install Dependencies
-        working-directory: apps/api
         run: uv sync --frozen
 
       - name: Run Ruff Lint Check
-        working-directory: apps/api
         run: uv run ruff check .
 
       - name: Run Ruff Format Check
-        working-directory: apps/api
         run: uv run ruff format . --check
 
       - name: Run Pytest Test Suite
-        working-directory: apps/api
         run: uv run pytest
 
   # ---------------------------------------------------------------------------
@@ -74,9 +74,8 @@ jobs:
         id: pnpm-store
         shell: bash
         run: |
-          STORE_PATH="$(pnpm store path --silent)"
-          echo "STORE_PATH=$STORE_PATH" >> $GITHUB_ENV
-          echo "store_path=$STORE_PATH" >> $GITHUB_OUTPUT
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+          echo "store_path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Cache pnpm dependencies
         uses: actions/cache@v4
