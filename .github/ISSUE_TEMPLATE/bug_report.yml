@@ -1,0 +1,73 @@
+name: "🐛 Bug Report"
+description: Create a report to help us reproduce and fix an issue
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please ensure you have checked existing issues before submitting.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of the SentryForm stack is affected?
+      options:
+        - "apps/api (FastAPI / ONNX Engine / Polars)"
+        - "apps/web (Next.js / Dashboard / Applicant Form)"
+        - "deployment (Docker Compose / K8s / Helm)"
+        - "monitoring (Prometheus / Grafana)"
+        - "ci-cd (GitHub Actions workflows)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detail the steps necessary to reproduce the behavior.
+      placeholder: |
+        1. Start Docker stack with 'docker compose up'
+        2. Open applicant form at 'http://localhost:3000/apply'
+        3. Type into input fields...
+        4. See error in browser console / API logs
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs & Terminal Output
+      description: Paste any relevant container logs (`docker logs sentry_api`) or stack traces.
+      render: shell
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Information
+      description: Provide details about your OS, Docker version, and runtime machine setup.
+      placeholder: |
+        - OS: Windows 11 / Ubuntu 22.04 / macOS
+        - Docker Version: 25.0.3
+        - Node.js Version: 20.x
+        - Python Version: 3.11
+    validations:
+      required: false

@@ -1,0 +1,26 @@
+.git
+.gitignore
+.vscode
+.idea
+
+# Node / Web dependencies & caches
+node_modules
+apps/web/node_modules
+apps/web/.next
+apps/web/out
+.pnpm-store
+
+# Python virtual environments & bytecode
+.venv
+venv
+ENV
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.coverage
+
+# Deployment logs & temporary files
+*.log
+deployment/grafana/data

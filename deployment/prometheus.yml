@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 5s       # Collect metrics every 5 seconds for sub-10ms responsiveness
+  evaluation_interval: 5s   # Evaluate alerting rules every 5 seconds
+  scrape_timeout: 4s
+
+# Alertmanager configuration (optional)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Rule files for alerting/recording rules (optional)
+rule_files: []
+
+# Scrape Configurations
+scrape_configs:
+  # ---------------------------------------------------------------------------
+  # 1. Prometheus Self-Monitoring
+  # ---------------------------------------------------------------------------
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # ---------------------------------------------------------------------------
+  # 2. SentryForm FastAPI Behavioral Risk Scoring Engine
+  # ---------------------------------------------------------------------------
+  - job_name: "sentry_api"
+    metrics_path: "/metrics"
+    scheme: "http"
+    static_configs:
+      - targets: ["api:8000"]
+        labels:
+          environment: "production"
+          service: "behavioral-risk-engine"

@@ -1,0 +1,48 @@
+name: "🚀 Feature Request"
+description: Suggest an idea or architectural improvement for SentryForm
+title: "[FEAT]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a feature or improvement in mind? Let us know how we can make SentryForm better.
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of what feature or enhancement you are proposing.
+      placeholder: Describe the desired feature or functionality...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: Which area does this feature belong to?
+      options:
+        - "ML & Feature Engineering (Polars / LightGBM / ONNX)"
+        - "UI & Dashboard Experience (Next.js / Framer Motion / Lucide)"
+        - "Streaming Infrastructure (WebSockets / AsyncIO)"
+        - "DevOps & Cloud Orchestration (Kubernetes / Prometheus / Grafana)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Use-Case
+      description: Is your feature request related to a specific problem or friction point?
+      placeholder: I am always frustrated when...
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution / Implementation Sketch
+      description: How would you like this to work? Any API signatures or workflow ideas?
+    validations:
+      required: false
