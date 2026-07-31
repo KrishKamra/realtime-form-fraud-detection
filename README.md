@@ -350,7 +350,7 @@ cd apps/api && ruff check .
 **Krish Kamra**
 
 * **GitHub:** [@KrishKamra](https://github.com/KrishKamra)
-* **Project Repository:** [sentry-form](https://www.google.com/search?q=https://github.com/KrishKamra/sentry-form)
+* **Project Repository:** [sentry-form](https://github.com/KrishKamra/sentry-form)
 
 ---
 
