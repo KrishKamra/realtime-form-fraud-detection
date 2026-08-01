@@ -9,7 +9,7 @@ interface TrackedInputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   recordEvent: (
     type: TelemetryEvent["event_type"],
     fieldId: string,
-    extra?: { key_code?: string; cursor_x?: number; cursor_y?: number }
+    extra?: { key_code?: string; cursor_x?: number; cursor_y?: number },
   ) => void;
   error?: string;
   isNumericOnly?: boolean;
@@ -27,7 +27,7 @@ export const TrackedInput = forwardRef<HTMLInputElement, TrackedInputProps>(
       type,
       ...props
     },
-    ref
+    ref,
   ) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (isNumericOnly) {
@@ -51,7 +51,9 @@ export const TrackedInput = forwardRef<HTMLInputElement, TrackedInputProps>(
             ref={ref}
             id={fieldId}
             type={type === "number" ? "text" : type}
-            inputMode={isNumericOnly || type === "number" ? "numeric" : props.inputMode}
+            inputMode={
+              isNumericOnly || type === "number" ? "numeric" : props.inputMode
+            }
             onChange={handleChange}
             onKeyDown={(e) => {
               recordEvent("keydown", fieldId, { key_code: e.code });
@@ -89,7 +91,7 @@ export const TrackedInput = forwardRef<HTMLInputElement, TrackedInputProps>(
         {error && <span className="text-xs text-rose-400 mt-0.5">{error}</span>}
       </div>
     );
-  }
+  },
 );
 
 TrackedInput.displayName = "TrackedInput";
