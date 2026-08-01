@@ -31,7 +31,8 @@ RUN uv pip install --system \
     lightgbm \
     scikit-learn \
     prometheus-client \
-    pydantic
+    pydantic \
+    requests
 
 # Create a non-root system user for security
 RUN groupadd -g 1001 sentry && \
