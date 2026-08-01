@@ -38,7 +38,12 @@ export default function FraudAnalystDashboard() {
   useEffect(() => {
     const fetchLiveSessions = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/sessions");
+        const rawApiUrl =
+          process.env.NEXT_PUBLIC_API_URL ||
+          "https://realtime-form-fraud-detection.onrender.com";
+        const cleanApiUrl = rawApiUrl.replace(/\/$/, "");
+
+        const res = await fetch(`${cleanApiUrl}/api/sessions`);
         if (res.ok) {
           const data: LiveSessionEntry[] = await res.json();
           setSessions(data);
