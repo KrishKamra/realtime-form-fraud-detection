@@ -17,6 +17,7 @@ dependencies = [
     "scikit-learn>=1.9.0",
     "skl2onnx>=1.20.0",
     "uvicorn[standard]>=0.28.0",
+    "websockets>=17.0.1",
 ]
 
 [tool.pyright]
