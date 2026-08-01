@@ -1,3 +1,4 @@
+import os
 import time
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -20,11 +21,17 @@ app = FastAPI(
     description="Real-time behavioral risk scoring engine using Polars & ONNX",
 )
 
+# Parse origins dynamically from environment variables
+raw_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+allowed_origins = [
+    origin.strip() for origin in raw_origins.split(",") if origin.strip()
+]
+
 # Enable CORS for Frontend Next.js integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=allowed_origins if allowed_origins else ["*"],
+    allow_credentials="*" not in allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
