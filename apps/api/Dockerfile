@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
-# Stage 1: Dependency & Runtime Image
+# Production Multi-Stage Container Setup
 # -----------------------------------------------------------------------------
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install lightweight runtime dependencies & build tools
+# Install lightweight runtime dependencies & build tools (libgomp1 required for LightGBM)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
     curl \
@@ -16,11 +16,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 # Copy dependency definition files
-COPY apps/api/pyproject.toml apps/api/uv.lock* /app/
+COPY apps/api/pyproject.toml apps/api/uv.lock* /app/apps/api/
 
-# Install python dependencies globally inside the container
-RUN uv pip install --system fastapi uvicorn polars onnxruntime prometheus-client pydantic || \
-    pip install fastapi uvicorn polars onnxruntime prometheus-client pydantic
+# Install python dependencies globally inside container using pyproject.toml
+# Explicitly ensuring uvicorn[standard] and websockets are included
+RUN uv pip install --system \
+    "uvicorn[standard]>=0.28.0" \
+    "websockets>=12.0" \
+    fastapi \
+    polars \
+    onnxruntime \
+    onnx \
+    onnxmltools \
+    lightgbm \
+    scikit-learn \
+    prometheus-client \
+    pydantic
 
 # Create a non-root system user for security
 RUN groupadd -g 1001 sentry && \
@@ -29,8 +40,9 @@ RUN groupadd -g 1001 sentry && \
 # Copy API application source code
 COPY --chown=sentry:sentry apps/api /app/apps/api
 
-# Ensure models directory exists and copy model files if available
-RUN mkdir -p /app/models && \
+# Ensure model directory exists in both possible root paths and train if missing
+RUN mkdir -p /app/models /app/apps/api/models && \
+    python /app/apps/api/scripts/train.py || true && \
     if [ -d "/app/apps/api/models" ]; then cp -r /app/apps/api/models/* /app/models/ 2>/dev/null || true; fi && \
     chown -R sentry:sentry /app
 
