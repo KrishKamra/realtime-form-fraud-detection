@@ -50,6 +50,35 @@ Traditional fraud prevention relies on post-submission static data verifications
 
 ---
 
+## 🖼️ Visual Showcase & System Interfaces
+
+Explore the core user touchpoints and live biometric monitoring dashboards powering **SentryForm**:
+
+<div align="center">
+
+### 1. High-Friction Form Application (`/apply`)
+*Real-time keystroke dynamics and micro-cursor tracking actively assessing risk in the background.*
+
+<img src="./apply.png" alt="SentryForm Live Applicant Assessment Interface" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+
+---
+
+### 2. Live Operations & Forensics HUD (`/dashboard`)
+*Sub-10ms neural telemetry feed displaying active applicant sessions, anomaly triggers, and ONNX classification metrics.*
+
+<img src="./dashboard.png" alt="SentryForm Operations & Risk Scoring Dashboard" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+
+---
+
+### 3. SentryForm Overview & Landing Experience (`/`)
+*Developer-first onboarding showcase highlighting sub-second behavioral fraud detection architecture.*
+
+<img src="./landing_page.png" alt="SentryForm Landing Page" width="100%" style="border-radius: 8px;" />
+
+</div>
+
+---
+
 ## ⚡ Quick Results (The Hook)
 
 Evaluated against benchmark behavioral datasets combining synthetic bot trajectories and human applicant interaction profiles, SentryForm’s optimized LightGBM model outperforms traditional heuristic and neural baselines in inference speed and classification precision.
