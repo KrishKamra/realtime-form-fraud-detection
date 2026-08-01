@@ -376,7 +376,7 @@ cd apps/api && ruff check .
 
 ## 👤 Author & Maintainer
 
-**Krish Kamra**
+* **Krish Kamra** — *Lead Architect & Engineer*
 
 * **GitHub:** [@KrishKamra](https://github.com/KrishKamra)
 * **Project Repository:** [sentry-form](https://github.com/KrishKamra/sentry-form)
@@ -386,4 +386,5 @@ cd apps/api && ruff check .
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
-```
+
+---
