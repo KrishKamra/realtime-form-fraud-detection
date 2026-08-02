@@ -22,14 +22,25 @@
 
 <br>
 
-[![CI Pipeline](https://github.com/KrishKamra/sentry-form/actions/workflows/ci.yml/badge.svg)](https://github.com/KrishKamra/sentry-form/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![Python: 3.11](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![Framework: FastAPI 0.110](https://img.shields.io/badge/Framework-FastAPI%200.110-009688.svg?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Inference: ONNX Runtime](https://img.shields.io/badge/Inference-ONNX%20Runtime%201.17-00599C.svg?style=flat-square&logo=onnx&logoColor=white)](https://onnxruntime.ai/)
-[![Ecosystem: Next.js 14](https://img.shields.io/badge/Ecosystem-Next.js%2014-000000.svg?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![Language: TypeScript 5.7](https://img.shields.io/badge/Language-TypeScript%205.7-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Maintenance: Actively Developed](https://img.shields.io/badge/Maintenance-Actively%20Developed-10B981.svg?style=flat-square)](https://github.com/KrishKamra/sentry-form)
+<div align="center">
+
+<!-- Group: Backend & Core Engine -->
+<p>
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/FastAPI-0.110-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Polars-Engine-E05D44?style=for-the-badge&logo=polars&logoColor=white" alt="Polars" />
+  <img src="https://img.shields.io/badge/ONNX-Runtime_1.17-00599C?style=for-the-badge&logo=onnx&logoColor=white" alt="ONNX Runtime" />
+</p>
+
+<!-- Group: Frontend & Ecosystem -->
+<p>
+  <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/CI-Passing-10B981?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI Status" />
+  <img src="https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge" alt="License" />
+</p>
+
+</div>
 
 </div>
 
