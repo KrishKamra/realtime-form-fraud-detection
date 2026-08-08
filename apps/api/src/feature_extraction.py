@@ -21,12 +21,10 @@ class FeatureExtractor:
             "timestamp_ms": [e.timestamp_ms for e in events],
             "key_code": [e.key_code or "" for e in events],
             "cursor_x": [
-                float(e.cursor_x) if e.cursor_x is not None else None
-                for e in events
+                float(e.cursor_x) if e.cursor_x is not None else None for e in events
             ],
             "cursor_y": [
-                float(e.cursor_y) if e.cursor_y is not None else None
-                for e in events
+                float(e.cursor_y) if e.cursor_y is not None else None for e in events
             ],
         }
 

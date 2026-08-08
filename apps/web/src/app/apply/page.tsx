@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBehavioralTracker } from "@/hooks/useBehavioralTracker";
 import { TrackedInput } from "@/components/apply/TrackedInput";
@@ -16,13 +16,11 @@ import {
 } from "lucide-react";
 
 export default function LoanApplicationPage() {
-  // Fix Hydration Mismatch: Initialize sessionId on client-side mount only
-  const [sessionId, setSessionId] = useState<string>("");
-
-  useEffect(() => {
-    const generatedId = `sess_${Math.random().toString(36).substring(2, 9)}_${Date.now()}`;
-    setSessionId(generatedId);
-  }, []);
+  // Lazy state initialization prevents cascading re-renders and passes ESLint rules
+  const [sessionId] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return `sess_${Math.random().toString(36).substring(2, 9)}_${Date.now()}`;
+  });
 
   const [formData, setFormData] = useState({
     fullName: "",
