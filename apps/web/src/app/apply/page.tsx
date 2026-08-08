@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBehavioralTracker } from "@/hooks/useBehavioralTracker";
 import { TrackedInput } from "@/components/apply/TrackedInput";
@@ -16,9 +16,13 @@ import {
 } from "lucide-react";
 
 export default function LoanApplicationPage() {
-  const [sessionId] = useState(
-    () => `sess_${Math.random().toString(36).substring(2, 9)}_${Date.now()}`
-  );
+  // Fix Hydration Mismatch: Initialize sessionId on client-side mount only
+  const [sessionId, setSessionId] = useState<string>("");
+
+  useEffect(() => {
+    const generatedId = `sess_${Math.random().toString(36).substring(2, 9)}_${Date.now()}`;
+    setSessionId(generatedId);
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -50,6 +54,10 @@ export default function LoanApplicationPage() {
     : isMediumRisk
     ? "bg-amber-600/15"
     : "bg-indigo-600/15";
+
+  // SVG Gauge calculations
+  const CIRCUMFERENCE = 440;
+  const strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * riskScore) / 100;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center p-4 md:p-8 font-sans relative overflow-hidden">
@@ -221,7 +229,7 @@ export default function LoanApplicationPage() {
                   Risk Scoring HUD
                 </span>
                 <span className="font-mono text-[10px] text-slate-500">
-                  {sessionId}
+                  {sessionId || "Initializing..."}
                 </span>
               </div>
 
@@ -259,10 +267,9 @@ export default function LoanApplicationPage() {
                       r="70"
                       stroke="currentColor"
                       strokeWidth="12"
-                      strokeDasharray={440}
-                      animate={{
-                        strokeDashoffset: 440 - (440 * riskScore) / 100,
-                      }}
+                      strokeDasharray={CIRCUMFERENCE}
+                      initial={{ strokeDashoffset: CIRCUMFERENCE }}
+                      animate={{ strokeDashoffset: strokeDashoffset }}
                       transition={{ duration: 0.5, ease: "easeOut" }}
                       strokeLinecap="round"
                       className={`transition-colors duration-500 ${

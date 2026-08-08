@@ -63,6 +63,7 @@ data/processed/
 logs/
 deployment/grafana/data/
 deployment/prometheus/data/
+*.zed/
 
 # =============================================================================
 # Operating System & IDE Configurations

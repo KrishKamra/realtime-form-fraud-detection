@@ -79,9 +79,10 @@ async def websocket_telemetry_endpoint(websocket: WebSocket, session_id: str):
             # Append events to session buffer
             session_buffers[session_id].extend(batch.events)
 
-            # Retain sliding window of last 200 events
-            if len(session_buffers[session_id]) > 200:
-                session_buffers[session_id] = session_buffers[session_id][-200:]
+            # 💡 OPTIMIZATION: Retain smaller sliding window of last 60 events
+            # Makes rolling averages (flight time, jitter) hyper-responsive to rapid input changes
+            if len(session_buffers[session_id]) > 60:
+                session_buffers[session_id] = session_buffers[session_id][-60:]
 
             # Polars Feature Extraction
             features = FeatureExtractor.extract_features(session_buffers[session_id])
@@ -116,6 +117,7 @@ async def websocket_telemetry_endpoint(websocket: WebSocket, session_id: str):
                 "triggers": triggers,
                 "event_count": len(session_buffers[session_id]),
                 "last_updated": time.strftime("%H:%M:%S"),
+                "status": "active",
             }
 
             await websocket.send_text(response.model_dump_json())
@@ -125,4 +127,12 @@ async def websocket_telemetry_endpoint(websocket: WebSocket, session_id: str):
     finally:
         ACTIVE_WEBSOCKETS.dec()
         session_buffers.pop(session_id, None)
-        ACTIVE_SESSIONS.pop(session_id, None)  # Clean up disconnected sessions
+
+        # Mark session as disconnected for dashboard inspection rather than nuking it
+        if session_id in ACTIVE_SESSIONS:
+            ACTIVE_SESSIONS[session_id]["status"] = "disconnected"
+
+        # Cap memory store to max 50 recent sessions
+        if len(ACTIVE_SESSIONS) > 50:
+            oldest_key = next(iter(ACTIVE_SESSIONS))
+            ACTIVE_SESSIONS.pop(oldest_key, None)

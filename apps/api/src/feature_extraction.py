@@ -14,9 +14,34 @@ class FeatureExtractor:
         if not events:
             return np.zeros((1, 8), dtype=np.float32)
 
-        # Convert Pydantic models to list of dicts for Polars conversion
-        raw_data = [e.model_dump() for e in events]
-        df = pl.DataFrame(raw_data)
+        # Build columnar dictionary with explicit types to prevent Polars schema inference failures
+        data = {
+            "event_type": [e.event_type for e in events],
+            "field_id": [e.field_id for e in events],
+            "timestamp_ms": [e.timestamp_ms for e in events],
+            "key_code": [e.key_code or "" for e in events],
+            "cursor_x": [
+                float(e.cursor_x) if e.cursor_x is not None else None
+                for e in events
+            ],
+            "cursor_y": [
+                float(e.cursor_y) if e.cursor_y is not None else None
+                for e in events
+            ],
+        }
+
+        # Explicitly enforce schema
+        df = pl.DataFrame(
+            data,
+            schema={
+                "event_type": pl.Utf8,
+                "field_id": pl.Utf8,
+                "timestamp_ms": pl.Int64,
+                "key_code": pl.Utf8,
+                "cursor_x": pl.Float64,
+                "cursor_y": pl.Float64,
+            },
+        )
 
         # Extract Keystroke Metrics (Dwell & Flight Times)
         keystroke_df = df.filter(pl.col("event_type").is_in(["keydown", "keyup"]))

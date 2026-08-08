@@ -22,30 +22,38 @@ export function useBehavioralTracker(
     applicantNameRef.current = applicantName;
   }, [applicantName]);
 
-  // Construct WebSocket Endpoint URL correctly
+  // Construct WebSocket Endpoint URL correctly with Local Fallback
   const getWsEndpoint = useCallback(() => {
-    const rawWsUrl =
-      process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000";
-    const cleanBaseUrl = rawWsUrl.replace(/\/$/, "");
+    if (!sessionId) return "";
+    let rawWsUrl = process.env.NEXT_PUBLIC_WS_URL;
+
+    if (!rawWsUrl && typeof window !== "undefined") {
+      const isLocal =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+      rawWsUrl = isLocal
+        ? "ws://localhost:8000"
+        : "wss://realtime-form-fraud-detection.onrender.com";
+    }
+
+    const cleanBaseUrl = (rawWsUrl || "ws://localhost:8000").replace(/\/$/, "");
     return `${cleanBaseUrl}/ws/telemetry/${sessionId}`;
   }, [sessionId]);
 
-  // Initialize Reconnecting WebSocket Stream
+  // Initialize WebSocket Stream
   useEffect(() => {
+    // Guard: Do NOT open connection until sessionId is initialized
+    if (!sessionId) return;
+
     let ws: WebSocket | null = null;
     let isMounted = true;
+    let reconnectTimer: NodeJS.Timeout | null = null;
 
     const connect = async () => {
       try {
-        // 1. Wake up Render container if it's sleeping (cold start)
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-        await fetch(`${apiUrl}/health`).catch(() => {});
-
-        if (!isMounted) return;
-
-        // 2. Establish connection to /ws/telemetry/{session_id}
         const wsUrl = getWsEndpoint();
+        if (!wsUrl) return;
+
         ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
@@ -60,29 +68,25 @@ export function useBehavioralTracker(
             const data: RiskScoreResponse = JSON.parse(event.data);
             setRiskData(data);
           } catch (err) {
-            console.error(
-              "[SentryForm] Failed to parse WebSocket payload:",
-              err,
-            );
+            console.error("[SentryForm] Failed to parse WebSocket payload:", err);
           }
         };
 
-        ws.onclose = () => {
+        ws.onclose = (evt) => {
           if (!isMounted) return;
           setIsConnected(false);
-          console.warn("[SentryForm] WebSocket disconnected. Reconnecting in 2s...");
 
-          // Reconnect logic
-          setTimeout(() => {
-            if (isMounted) {
-              connect();
-            }
-          }, 2000);
+          // Only reconnect if the closure wasn't intentional
+          if (evt.code !== 1000) {
+            reconnectTimer = setTimeout(() => {
+              if (isMounted) connect();
+            }, 2000);
+          }
         };
 
         wsRef.current = ws;
       } catch (err) {
-        console.error("[SentryForm] WebSocket connection setup failed:", err);
+        console.error("[SentryForm] WebSocket setup failed:", err);
       }
     };
 
@@ -90,14 +94,18 @@ export function useBehavioralTracker(
 
     return () => {
       isMounted = false;
+      if (reconnectTimer) clearTimeout(reconnectTimer);
       if (ws) {
-        ws.close();
+        ws.onclose = null; // Prevent reconnect loop on clean unmount
+        ws.close(1000, "Component unmounted");
       }
     };
   }, [sessionId, getWsEndpoint]);
 
-  // Flush buffered events to WebSocket every 400ms
+  // Flush buffered events to WebSocket every 250ms for responsive scoring
   useEffect(() => {
+    if (!sessionId) return;
+
     const interval = setInterval(() => {
       if (
         wsRef.current &&
@@ -113,12 +121,12 @@ export function useBehavioralTracker(
         wsRef.current.send(JSON.stringify(batch));
         eventBuffer.current = []; // Clear buffer post-flush
       }
-    }, 400);
+    }, 250); // Lowered from 400ms to 250ms for hyper-responsive HUD updates
 
     return () => clearInterval(interval);
   }, [sessionId]);
 
-  // Recording Handler attached to input fields
+  // Recording Handler with Client Buffer Cap
   const recordEvent = useCallback(
     (
       type: TelemetryEvent["event_type"],
@@ -131,7 +139,13 @@ export function useBehavioralTracker(
         timestamp_ms: Date.now(),
         ...extra,
       };
+
       eventBuffer.current.push(event);
+
+      // Prevent runaway array sizes on hyper-fast mouse moves
+      if (eventBuffer.current.length > 100) {
+        eventBuffer.current = eventBuffer.current.slice(-100);
+      }
     },
     [],
   );

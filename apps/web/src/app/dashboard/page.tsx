@@ -38,10 +38,16 @@ export default function FraudAnalystDashboard() {
   useEffect(() => {
     const fetchLiveSessions = async () => {
       try {
-        const rawApiUrl =
-          process.env.NEXT_PUBLIC_API_URL ||
-          "https://realtime-form-fraud-detection.onrender.com";
-        const cleanApiUrl = rawApiUrl.replace(/\/$/, "");
+        // Automatically determine local vs production URL dynamically
+        let rawApiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+        if (!rawApiUrl && typeof window !== "undefined") {
+          rawApiUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:8000"
+            : "https://realtime-form-fraud-detection.onrender.com";
+        }
+
+        const cleanApiUrl = (rawApiUrl || "http://localhost:8000").replace(/\/$/, "");
 
         const res = await fetch(`${cleanApiUrl}/api/sessions`);
         if (res.ok) {
