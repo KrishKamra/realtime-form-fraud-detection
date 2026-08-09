@@ -65,6 +65,7 @@ Traditional fraud prevention relies on post-submission static data verifications
 
 Explore the core product surfaces powering **SentryForm** — marketing narrative, live applicant scoring, and the fraud operations console.
 
+> [!NOTE]
 > Screenshots live under [`docs/screenshots/`](./docs/screenshots). Refresh with:
 > ```bash
 > cd apps/web && node scripts/capture-screenshots.mjs
