@@ -4,7 +4,7 @@
  * Requires: web on :3000; API on :8000 improves dashboard shots.
  */
 import { chromium } from "playwright";
-import { copyFile, mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -213,17 +213,6 @@ async function main() {
   await page.waitForTimeout(3000);
   await shot(page, "dashboard");
   await shot(page, "dashboard-full", { fullPage: true });
-
-  // Root aliases used by existing README paths
-  const aliases = [
-    ["landing-full", "landing_page.png"],
-    ["apply-active", "apply.png"],
-    ["dashboard", "dashboard.png"],
-  ];
-  for (const [src, dest] of aliases) {
-    await copyFile(path.join(OUT, `${src}.png`), path.join(ROOT, dest));
-    console.log("copied", dest);
-  }
 
   await writeFile(
     path.join(OUT, "manifest.json"),

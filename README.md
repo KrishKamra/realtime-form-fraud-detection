@@ -65,14 +65,15 @@ Traditional fraud prevention relies on post-submission static data verifications
 
 Explore the core product surfaces powering **SentryForm** — marketing narrative, live applicant scoring, and the fraud operations console.
 
-> Screenshots live under [`docs/screenshots/`](./docs/screenshots). Root aliases (`landing_page.png`, `apply.png`, `dashboard.png`) are kept for compatibility. Refresh with:
+> Screenshots live under [`docs/screenshots/`](./docs/screenshots). Refresh with:
 > ```bash
 > cd apps/web && node scripts/capture-screenshots.mjs
 > ```
 
+<div align="center">
+
 ### Landing experience (`/`)
 
-<div align="center">
 
 #### Hero — dual portals into the product
 *Neural mesh background, Lenis-smooth scroll, and clear CTAs into the applicant flow and analyst console.*
@@ -106,9 +107,10 @@ Explore the core product surfaces powering **SentryForm** — marketing narrativ
 
 ---
 
+<div align="center">
+
 ### Applicant assessment (`/apply`)
 
-<div align="center">
 
 *Glass form + live Risk Scoring HUD. Keystroke, focus, and pointer telemetry stream over WebSocket; the risk gauge, anomaly flags, and inference latency update in real time.*
 
@@ -118,9 +120,10 @@ Explore the core product surfaces powering **SentryForm** — marketing narrativ
 
 ---
 
+<div align="center">
+
 ### Fraud operations console (`/dashboard`)
 
-<div align="center">
 
 *Live session table with risk sparklines, filter/search controls, and a forensics drawer (gauge + trajectory + anomaly rules).*
 
