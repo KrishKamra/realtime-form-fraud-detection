@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useId, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Lock, ShieldAlert, ShieldCheck } from "lucide-react";
 import { useBehavioralTracker } from "@/hooks/useBehavioralTracker";
@@ -12,10 +12,12 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { riskTier } from "@/lib/utils";
 
 export default function LoanApplicationPage() {
-  const [sessionId] = useState<string>(() => {
-    if (typeof window === "undefined") return "";
-    return `sess_${Math.random().toString(36).substring(2, 9)}_${Date.now()}`;
-  });
+  // useId is stable across SSR + hydration (unlike Math.random / Date.now)
+  const reactId = useId();
+  const sessionId = useMemo(
+    () => `sess_${reactId.replace(/:/g, "")}`,
+    [reactId],
+  );
 
   const [formData, setFormData] = useState({
     fullName: "",
