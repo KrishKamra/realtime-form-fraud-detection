@@ -6,6 +6,7 @@ import type {
   RiskScoreResponse,
   TelemetryBatch,
 } from "@/types/telemetry";
+import { getWsBaseUrl } from "@/lib/api";
 
 export function useBehavioralTracker(
   sessionId: string,
@@ -22,22 +23,9 @@ export function useBehavioralTracker(
     applicantNameRef.current = applicantName;
   }, [applicantName]);
 
-  // Construct WebSocket Endpoint URL correctly with Local Fallback
   const getWsEndpoint = useCallback(() => {
     if (!sessionId) return "";
-    let rawWsUrl = process.env.NEXT_PUBLIC_WS_URL;
-
-    if (!rawWsUrl && typeof window !== "undefined") {
-      const isLocal =
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1";
-      rawWsUrl = isLocal
-        ? "ws://localhost:8000"
-        : "wss://realtime-form-fraud-detection.onrender.com";
-    }
-
-    const cleanBaseUrl = (rawWsUrl || "ws://localhost:8000").replace(/\/$/, "");
-    return `${cleanBaseUrl}/ws/telemetry/${sessionId}`;
+    return `${getWsBaseUrl()}/ws/telemetry/${sessionId}`;
   }, [sessionId]);
 
   // Initialize WebSocket Stream

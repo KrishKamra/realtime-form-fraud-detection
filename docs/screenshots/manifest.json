@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-08-09T18:30:04.778Z",
+  "base": "http://localhost:3000",
+  "seedSession": "readme_seed_1786300190376",
+  "files": [
+    "landing-full.png",
+    "landing-hero.png",
+    "landing-stats.png",
+    "landing-how-it-works.png",
+    "landing-features.png",
+    "landing-cta.png",
+    "apply.png",
+    "apply-active.png",
+    "dashboard.png",
+    "dashboard-full.png"
+  ]
+}

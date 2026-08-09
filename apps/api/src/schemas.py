@@ -38,3 +38,8 @@ class RiskScoreResponse(BaseModel):
     is_anomalous: bool
     latency_ms: float
     triggers: list[str]
+    event_count: int | None = Field(
+        default=None,
+        description="Buffered telemetry frames in the session sliding window",
+    )
+    applicant_name: str | None = None

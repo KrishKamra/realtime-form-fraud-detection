@@ -104,6 +104,7 @@ async def websocket_telemetry_endpoint(websocket: WebSocket, session_id: str):
                 is_anomalous=bool(is_anomalous),
                 latency_ms=round(elapsed_latency_ms, 3),
                 triggers=triggers,
+                event_count=len(session_buffers[session_id]),
             )
 
             # Update shared session store with applicant identity

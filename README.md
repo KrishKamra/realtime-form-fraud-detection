@@ -63,28 +63,68 @@ Traditional fraud prevention relies on post-submission static data verifications
 
 ## 🖼️ Visual Showcase & System Interfaces
 
-Explore the core user touchpoints and live biometric monitoring dashboards powering **SentryForm**:
+Explore the core product surfaces powering **SentryForm** — marketing narrative, live applicant scoring, and the fraud operations console.
+
+> Screenshots live under [`docs/screenshots/`](./docs/screenshots). Root aliases (`landing_page.png`, `apply.png`, `dashboard.png`) are kept for compatibility. Refresh with:
+> ```bash
+> cd apps/web && node scripts/capture-screenshots.mjs
+> ```
+
+### Landing experience (`/`)
 
 <div align="center">
 
-### 1. High-Friction Form Application (`/apply`)
-*Real-time keystroke dynamics and micro-cursor tracking actively assessing risk in the background.*
+#### Hero — dual portals into the product
+*Neural mesh background, Lenis-smooth scroll, and clear CTAs into the applicant flow and analyst console.*
 
-<img src="./apply.png" alt="SentryForm Live Applicant Assessment Interface" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+<img src="./docs/screenshots/landing-hero.png" alt="SentryForm landing hero" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+
+#### Model & pipeline stats
+*Animated benchmark strip: ROC-AUC, inference latency, feature count, and precision.*
+
+<img src="./docs/screenshots/landing-stats.png" alt="SentryForm stats strip" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+
+#### How it works
+*Capture → Polars vectorization → ONNX C++ scoring in three glass cards.*
+
+<img src="./docs/screenshots/landing-how-it-works.png" alt="SentryForm how it works section" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+
+#### Capability bento
+*Sub-10ms inference, zero-PII design, bot defense, live HUD, and production stack highlights.*
+
+<img src="./docs/screenshots/landing-features.png" alt="SentryForm feature bento" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+
+#### Final CTA
+*One-click path into the live biometric assessment or operations center.*
+
+<img src="./docs/screenshots/landing-cta.png" alt="SentryForm CTA section" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+
+#### Full landing page
+<img src="./docs/screenshots/landing-full.png" alt="SentryForm full landing page" width="100%" style="border-radius: 8px; margin-bottom: 28px;" />
+
+</div>
 
 ---
 
-### 2. Live Operations & Forensics HUD (`/dashboard`)
-*Sub-10ms neural telemetry feed displaying active applicant sessions, anomaly triggers, and ONNX classification metrics.*
+### Applicant assessment (`/apply`)
 
-<img src="./dashboard.png" alt="SentryForm Operations & Risk Scoring Dashboard" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
+<div align="center">
+
+*Glass form + live Risk Scoring HUD. Keystroke, focus, and pointer telemetry stream over WebSocket; the risk gauge, anomaly flags, and inference latency update in real time.*
+
+<img src="./docs/screenshots/apply-active.png" alt="SentryForm live applicant assessment with risk HUD" width="100%" style="border-radius: 8px; margin-bottom: 28px;" />
+
+</div>
 
 ---
 
-### 3. SentryForm Overview & Landing Experience (`/`)
-*Developer-first onboarding showcase highlighting sub-second behavioral fraud detection architecture.*
+### Fraud operations console (`/dashboard`)
 
-<img src="./landing_page.png" alt="SentryForm Landing Page" width="100%" style="border-radius: 8px;" />
+<div align="center">
+
+*Live session table with risk sparklines, filter/search controls, and a forensics drawer (gauge + trajectory + anomaly rules).*
+
+<img src="./docs/screenshots/dashboard.png" alt="SentryForm operations dashboard with sparklines" width="100%" style="border-radius: 8px; margin-bottom: 20px;" />
 
 </div>
 

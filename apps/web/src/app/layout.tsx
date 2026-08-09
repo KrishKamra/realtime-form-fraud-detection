@@ -1,16 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { LenisProvider } from "@/components/layout/LenisProvider";
+import { PageTransition } from "@/components/layout/PageTransition";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-jetbrains",
   display: "swap",
 });
 
@@ -34,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#020617",
+  themeColor: "#09090b",
   width: "device-width",
   initialScale: 1,
 };
@@ -47,10 +49,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${inter.variable} ${jetbrainsMono.variable} scroll-smooth`}
+      className={`dark ${inter.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="bg-slate-950 text-slate-100 antialiased font-sans selection:bg-indigo-500/30 selection:text-indigo-200 min-h-screen flex flex-col">
-        {children}
+      <body className="min-h-screen bg-slate-950 font-sans text-slate-100 antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+        <LenisProvider>
+          <PageTransition>{children}</PageTransition>
+        </LenisProvider>
       </body>
     </html>
   );
